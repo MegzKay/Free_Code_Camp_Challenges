@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--CHALLENGES FROM: https://www.freecodecamp.com/-->
+  <head>
+    <title>Friendly Date Ranges</title>
+
+</head>
+
+<body>
+
+	
+	<script>
+
+	var answers = [];
+	answers[0] = ["July 1st","4th"];
+	answers[1] = ["December 1st","February 3rd"];
+	answers[2] = ["December 1st, 2016","February 3rd, 2018"];
+	answers[3] = ["March 1st, 2017","May 5th"];
+	answers[4] = ["January 13th, 2018"];
+	answers[5] = ["September 5th, 2022","September 4th"];
+	answers[6] = ["September 5th, 2022","September 5th, 2023"];
+	
+	//Tests from Free Code Camp
+	var tests = [];
+	tests[0] = makeFriendlyDates(["2016-07-01", "2016-07-04"]);
+	tests[1] = makeFriendlyDates(["2016-12-01", "2017-02-03"]);
+	tests[2] = makeFriendlyDates(["2016-12-01", "2018-02-03"]);
+	tests[3] = makeFriendlyDates(["2017-03-01", "2017-05-05"]);
+	tests[4] = makeFriendlyDates(["2018-01-13", "2018-01-13"]);
+	tests[5] = makeFriendlyDates(["2022-09-05", "2023-09-04"]);
+	tests[6] = makeFriendlyDates(["2022-09-05", "2023-09-05"]);
+
+	
+	for(var i = 0; i < tests.length; i++)
+	{
+		var theResults = "Test: " + tests[i] + "</br> Answers: " + answers[i];
+		document.write(theResults + "</br></br>");
+	}
+	
+	
+	function makeFriendlyDates(arr) {
+
+		var formatted = [];
+		formatted[0] = intoDateFormat(arr[0]);
+		formatted[1] = intoDateFormat(arr[1]);
+		var date1 = new Date(formatted[0]);
+		var date2 = new Date(formatted[1]);
+
+
+		var arrToReturn=[];
+		//date 1 and 2 will not return equal even if they are the same
+		if(formatted[0]==formatted[1])
+		{
+			arrToReturn.push(getMonth(date1)+ " "+ date1.getDate()+getSuffix(date1.getDate()) + ", "+date1.getFullYear());
+		}
+		//same month and year
+		else if(getMonth(date1)==getMonth(date2) && date1.getFullYear() == date2.getFullYear())
+		{
+			arrToReturn.push(getMonth(date1)+ " "+ date1.getDate()+getSuffix(date1.getDate()));
+			arrToReturn.push(date2.getDate()+getSuffix(date2.getDate()));
+		}
+		//same year
+		else if(date1.getFullYear() == date2.getFullYear())
+		{
+			arrToReturn.push(getMonth(date1)+ " "+ date1.getDate()+getSuffix(date1.getDate())  + ", "+date1.getFullYear());
+			arrToReturn.push(getMonth(date2)+ " "+ date2.getDate()+getSuffix(date2.getDate()));
+		}
+		//date within one year AND months are the same
+		else if( isDateWithinOneYear(date1, date2) && getMonth(date1)==getMonth(date2)) 
+		{
+			arrToReturn.push(getMonth(date1)+ " "+ date1.getDate()+getSuffix(date1.getDate())  + ", "+date1.getFullYear());
+			arrToReturn.push(getMonth(date2)+ " "+ date2.getDate()+getSuffix(date2.getDate()));
+		}
+		//date within one year BUT months are the different
+		else if(isDateWithinOneYear(date1, date2) && getMonth(date1)!=getMonth(date2))
+		{
+					
+			arrToReturn.push(getMonth(date1)+ " "+ date1.getDate()+getSuffix(date1.getDate()));
+			arrToReturn.push(getMonth(date2)+ " "+ date2.getDate()+getSuffix(date2.getDate()));
+		}
+		//else put full date
+		else 
+		{
+			arrToReturn.push(getMonth(date1)+ " "+ date1.getDate()+getSuffix(date1.getDate()) + ", "+date1.getFullYear());
+			arrToReturn.push(getMonth(date2)+ " "+ date2.getDate()+getSuffix(date2.getDate()) + ", "+date2.getFullYear());
+		}
+	  
+		return arrToReturn;
+	}
+	/*
+	Returns true if date 2 less than a year later of date 1
+	*/
+	function isDateWithinOneYear(date1, date2)
+	{
+		dateNew = new Date(date2);
+		dateNew.setFullYear(dateNew.getFullYear()-1);
+
+		if(dateNew < date1)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		}
+		//gets the correct suffix for a day
+		function getSuffix(day)
+		{
+		var ending = "th";
+
+	  
+		if(day==2 || day == 22)
+		{
+			ending = "nd";
+		}
+		else if(day == 1 || day == 21 || day == 31)
+		{
+		  ending = "st";
+		}
+		else if(day == 3 || day == 23)
+		{
+			ending = "rd";
+		}
+		return ending;
+  
+  
+	}
+	//originally date is in format YYYY-MM-DD, so put into correct order(US) MM-DD-YYYY
+	function intoDateFormat(date)
+	{
+		var firstDash = date.indexOf('-');
+		var secondDash = date.indexOf('-',5);
+		var year = date.substr(0,firstDash);
+		var month = date.substr(firstDash+1,2);
+		var day = date.substr(secondDash+1);
+		return  month+"-"+day+"-"+year;
+	}
+	//gets the long month of the date passed in
+	function getMonth(date)
+	{
+		var locale = "en-us";
+		return date.toLocaleString(locale, { month: "long" });
+	}
+
+
+
+
+	</script>
+</body>
+</html>

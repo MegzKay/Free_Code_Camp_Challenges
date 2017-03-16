@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--CHALLENGES FROM: https://www.freecodecamp.com/-->
+  <head>
+    <title>Exact Change</title>
+
+</head>
+
+<body>
+	<script>
+	
+	var answers = [[["QUARTER", "0.50"]],"Insufficient Funds",[["TWENTY", "60.00"], ["TEN", "20.00"], ["FIVE", "15.00"], ["ONE", "1.00"], ["QUARTER", "0.50"], ["DIME", "0.20"], ["PENNY", "0.04"]], "Closed"];
+	var tests = [];
+	//Tests from Free Code Camp
+	tests[0] = checkCashRegister(19.50, 20.00, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.10], ["QUARTER", 4.25], ["ONE", 90.00], ["FIVE", 55.00], ["TEN", 20.00], ["TWENTY", 60.00], ["ONE HUNDRED", 100.00]]);
+	tests[1] = checkCashRegister(19.50, 20.00, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1.00], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]);
+	tests[2] = checkCashRegister(3.26, 100.00, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.10], ["QUARTER", 4.25], ["ONE", 90.00], ["FIVE", 55.00], ["TEN", 20.00], ["TWENTY", 60.00], ["ONE HUNDRED", 100.00]]);
+	tests[3] = checkCashRegister(19.50, 20.00, [["PENNY", 0.50], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]);
+	
+	
+	for(var i = 0; i < tests.length; i++)
+	{
+		var theResults = "Test: " + tests[i] + "</br> Answers: " + answers[i];
+		document.write(theResults + "</br></br>");
+	}
+
+	function checkCashRegister(price, cash, cid) {
+	//change
+	var totalChange = cash - price;
+	
+	//this is whats returned
+	//coins and amount of coins that 
+	//equals the change
+	var changeToGiveBack = [];
+	
+	//set up variable for change in register
+	var changeInRegister = 0;
+
+	//loops through cash in drawer and adds together
+	cid.forEach(function(item,index){
+		changeInRegister += item[1];
+	});
+
+	//checks too see if there is enough change in the register
+	if(changeInRegister < totalChange )
+	{
+		changeToGiveBack = "Insufficient Funds";
+	}
+	else if(changeInRegister == totalChange )
+	{
+		changeToGiveBack = "Closed";
+	}
+	else
+	{
+		//loops through cash in drawer
+		for(var i = cid.length-1; i >= 0; i--)
+		{
+			//sets up needed variables
+			var currentCoin = cid[i][0];
+			var totalAmtOfCoinInRegister = cid[i][1];
+			var currentCoinValue = coinValue(currentCoin);
+			
+			//checks to see if the change is greater than the coin value
+			//and if the total amount in the register is greater than 0
+			while(totalChange >= currentCoinValue && totalAmtOfCoinInRegister > 0)
+			{
+				//deduct the value of the coin from register and change
+				totalAmtOfCoinInRegister -= currentCoinValue;
+				totalChange -= currentCoinValue;
+				
+				//determine whether to create a coin object in changeToGiveBack
+				var createCoin = needCoinObject(changeToGiveBack, currentCoin);
+				if(!createCoin )
+				{
+					//if no coin object create one
+					//a string does not work with result from free codecamp since they want a [string,number]
+					changeToGiveBack.push([currentCoin, parseFloat(currentCoinValue.toFixed(2)) ]);
+
+				}
+				else
+				{
+					//if the coin object exists add to value
+					addValueToCoinObject(changeToGiveBack, currentCoin, currentCoinValue);
+				}
+				//make sure totalChange is fixed to two decimal places at the end of everything
+				//for checking with the while loop
+				totalChange = parseFloat(totalChange.toFixed(2));
+				
+			}
+
+			
+			/*
+				This is to check if there is insuffcient funds at the end
+				
+				Also handles abnormal cases:
+				For Example, if .50 is to be given back, 
+				but there is only one penny and a one dollar coin. 
+				0.50 can not come out of that.
+				In this case, due to a total of one penny(currentCoinValue) being less than 
+				the 0.50(totalChange), the penny is added in when it shouldn't.
+
+			*/
+			if(i === 0 && totalChange > 0)
+			{
+				changeToGiveBack = "Insufficient Funds";
+			}
+		}
+	}
+  
+	return changeToGiveBack;
+}
+
+/*
+	This function handles adding a coin object to the changeToGiveBack array
+*/
+function addValueToCoinObject(changeToGiveBack, currentCoin, currentCoinValue)
+{
+	for(var i = 0; i < changeToGiveBack.length; i++)
+	{
+		//if the current item is equal to the current coin, add the currentCoinValue
+		if(changeToGiveBack[i][0] == currentCoin)
+		{
+			var num = parseFloat(changeToGiveBack[i][1]) + parseFloat(currentCoinValue);
+			//a string does not work with result from free codecamp since they want a [string,number]
+			changeToGiveBack[i][1] =parseFloat(num.toFixed(2));
+		}
+	}
+
+	
+}
+
+/*
+	This function determines if a coin object needs to be added to changeToGiveBack array
+*/
+function needCoinObject(changeToGiveBack, currentCoin)
+{
+	var doesExist = false;
+	
+	if(changeToGiveBack.length === 0)
+	{
+		doesExist = false;
+	}
+	else
+	{
+		for(var i = 0; i < changeToGiveBack.length; i++)
+		{
+			//if the current item is equal to the current coin, the coin object exists
+			if(changeToGiveBack[i][0] == currentCoin)
+			{
+				doesExist = true;
+			}
+		}
+	
+	}
+	return doesExist;
+	
+}
+
+/*
+	This function takes in the coin and returns its value
+*/
+function coinValue(coin)
+{
+	switch(coin)
+	{
+		case "PENNY":
+			return 0.01;
+		case "NICKEL": 
+			return 0.05;
+		case "DIME": 
+			return 0.10;
+		case "QUARTER": 
+			return 0.25;
+		case "ONE": 
+			return 1.00;
+		case "FIVE":
+			return 5.00;
+		case "TEN": 
+			return 10.00;
+		case "TWENTY":
+			return 20.00;
+		case "ONE HUNDRED":
+			return 100.00;
+	}
+}
+
+	</script>
+</body>
+</html>

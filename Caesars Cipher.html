@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--CHALLENGES FROM: https://www.freecodecamp.com/-->
+  <head>
+    <title>Caesars Cipher</title>
+
+</head>
+
+<body>
+
+	<script>
+	
+	//Tests from Free Code Camp
+	var answers = [ ["FREE CODE CAMP"], ["FREE PIZZA!"], ["FREE LOVE?"],["THE QUICK BROWN DOG JUMPED OVER THE LAZY FOX."]];
+	var tests = [];
+	tests[0] = rot13("SERR PBQR PNZC");
+	tests[1] = rot13("SERR CVMMN!");
+	tests[2] = rot13("SERR YBIR?");
+	tests[3] = rot13("GUR DHVPX OEBJA QBT WHZCRQ BIRE GUR YNML SBK.");
+	
+	for(var i = 0; i < answers.length; i++)
+	{
+		var theResults = "Test: " + tests[i] + "</br> Answers: " + answers[i];
+		document.write(theResults + "</br></br>");
+	}
+
+	function rot13(str) { 
+	  var decoded = "";
+	  
+		for(var i = 0; i < str.length; i++)
+		{
+			if(str.charAt(i).match(/[A-Z]/)) decoded += getDecipheredLetter(str.charAt(i));
+			else decoded +=str.charAt(i);
+		}
+
+	  return decoded;
+	}
+	function getDecipheredLetter(l)
+	{
+		var orgCode = l.charCodeAt(0);
+		var newCode = orgCode + 13;
+		if(newCode > 90)
+		{
+			newCode = (newCode - 90) + 64;
+		}
+		return String.fromCharCode(newCode);
+	}
+
+
+	</script>
+</body>
+</html>

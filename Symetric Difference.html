@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--CHALLENGES FROM: https://www.freecodecamp.com/-->
+  <head>
+    <title>Symmetric Difference</title>
+
+</head>
+
+<body>
+	
+	<script>
+	
+	//Tests from Free Code Camp
+	var answers = [ [1, 4, 5], [1, 4, 5], [2, 3, 4, 6, 7],[1, 2, 4, 5, 6, 7, 8, 9], [3, 4, 5] ];
+	var tests = [];
+	tests[0] = sym([1, 2, 5], [2, 3, 5], [3, 4, 5]);
+	tests[1] = sym([1, 1, 2, 5], [2, 2, 3, 5], [3, 4, 5, 5]);
+	tests[2] = sym([3, 3, 3, 2, 5], [2, 1, 5, 7], [3, 4, 6, 6], [1, 2, 3]);
+	tests[3] = sym([3, 3, 3, 2, 5], [2, 1, 5, 7], [3, 4, 6, 6], [1, 2, 3], [5, 3, 9, 8], [1]);
+	tests[4] = sym([1, 2, 3], [5, 2, 1, 4]);
+	
+	for(var i = 0; i < answers.length; i++)
+	{
+		var theResults = "Test: " + tests[i] + "</br> Answers: " + answers[i];
+		document.write(theResults + "</br></br>");
+	}
+
+	function sym(args) {
+		//breaks down the arguments into an object of arrays
+		var ary = Array.prototype.slice.call(arguments);
+		var sym = symetricalDifference(ary);
+		
+		//sort the results of the only array left in the object
+		sym[0].sort(function(a, b) {
+			return a-b;
+		});
+		
+		//return the first array
+		return sym[0];
+	}
+	
+	function symetricalDifference(ary)
+	{
+		//Base Case: if there is one array left in the object, return it
+		if(ary.length === 1)
+		{
+			return ary;
+		}
+		//Recursive Case
+		else
+		{
+			//take the two arrays at the beginning of the object
+			var ary1 = ary.shift();
+			var ary2 = ary.shift();
+			
+			//All non matching numbers will go in the results
+			var result = [];
+			
+			//sort through both arrays to make sure all numbers are checked
+			//against the result array and the other array
+			ary1.forEach(function(item) {
+				if (ary2.indexOf(item) < 0 && result.indexOf(item) < 0) {
+					result.push(item);
+				}
+			});
+
+			ary2.forEach(function(item) {
+				if (ary1.indexOf(item) < 0 && result.indexOf(item) < 0) {
+					result.push(item);
+				}
+			});
+
+			//add results to ary and recall the method
+			ary.unshift(result);
+			return symetricalDifference(ary);
+
+		}
+	}
+
+
+	</script>
+</body>
+</html>

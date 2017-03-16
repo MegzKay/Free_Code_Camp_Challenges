@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--CHALLENGES FROM: https://www.freecodecamp.com/-->
+  <head>
+    <title>Caesars Cipher</title>
+
+</head>
+
+<body>
+	
+	<script>
+	
+	//Tests from Free Code Camp
+	var answers = [ 11, 1, 1, 10, 0];
+	var tests = [];
+	tests[0] = pairwise([1, 4, 2, 3, 0, 5], 7);
+	tests[1] = pairwise([1, 3, 2, 4], 4);
+	tests[2] = pairwise([1, 1, 1], 2);
+	tests[3] = pairwise([0, 0, 0, 0, 1, 1], 1);
+	tests[4] = pairwise([], 100);
+	
+	for(var i = 0; i < answers.length; i++)
+	{
+		var theResults = "Test: " + tests[i] + "</br> Answers: " + answers[i];
+		document.write(theResults + "</br></br>");
+	}
+
+	
+	function pairwise(arr, arg) 
+	{
+		var total = 0;
+		var indicesChecked = [];
+
+  
+		for(var i = 0; i < arr.length; i++)
+		{
+			 for(var j = i+1; j < arr.length; j++)
+			 {
+				   var sum = arr[i] + arr[j];
+				   
+				   //check that the sum equals the argument passed in
+				   //and the current indicies, i and j, have not been added together
+				   if(sum === arg && indicesChecked.indexOf(i) == -1 &&  indicesChecked.indexOf(j) == -1)
+				   {
+						 total += i + j;
+						 //indicies done so push to indiciesChecked array
+						  indicesChecked.push(i, j);
+						 
+				   }
+
+			 }
+		}
+    
+		return total;
+	}
+
+
+
+	</script>
+</body>
+</html>
