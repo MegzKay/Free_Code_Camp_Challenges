@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--CHALLENGES FROM: https://www.freecodecamp.com/-->
+  <head>
+    <title>Check for Palindromes</title>
+
+</head>
+
+<body>
+
+	<script>
+	
+	//Tests from Free Code Camp
+	var answers = [ 
+		true,
+		true,
+		true,
+		false,
+		true,
+		true,
+		false,
+		false,
+		true,
+		false,
+		true,
+		false
+	];
+	var tests = [];
+	tests[0] = palindrome("eye");
+	tests[1] = palindrome("_eye");
+	tests[2] = palindrome("race car");
+	tests[3] = palindrome("not a palindrome");
+	tests[4] = palindrome("A man, a plan, a canal. Panama");
+	tests[5] = palindrome("never odd or even");
+	tests[6] = palindrome("nope");
+	tests[7] = palindrome("almostomla");
+	tests[8] = palindrome("My age is 0, 0 si ega ym.");
+	tests[9] = palindrome("1 eye for of 1 eye.");
+	tests[10] = palindrome("0_0 (: /-\ :) 0-0");
+	tests[11] = palindrome("five|\_/|four");
+	
+	for(var i = 0; i < answers.length; i++)
+	{
+		var theResults = "Test: " + tests[i] + "</br> Answers: " + answers[i];
+		document.write(theResults + "</br></br>");
+	}
+
+	function palindrome(str) {
+	  str = str.toLowerCase().replace(/[^a-z0-9+]/gi, "");
+
+	  var mid = Math.floor(str.length/2);
+	  
+	  for(var i = 0; i < mid; i++)
+	  {
+		if(str[i] != str[str.length-1-i])
+		{
+		  return false;
+		}
+	  }
+	  return true;
+	}
+
+
+	</script>
+</body>
+</html>
