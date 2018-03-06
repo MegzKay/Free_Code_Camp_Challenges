@@ -49,10 +49,11 @@ function checkCashRegister(price, cash, cid) {
   for(var i = 0; i < cid.length;i++){
     drawer += cid[i][1];
   }
-  
+  //Return the string "Insufficient Funds" if cash-in-drawer is less than the change due. 
   if(drawer == change){
       return "Closed";
   }
+  //Return the string "Closed" if cash-in-drawer is equal to the change due.
   if(drawer < change)
   {
       return "Insufficient Funds";
@@ -64,24 +65,20 @@ function checkCashRegister(price, cash, cid) {
     //if change is less than the current denomination, the lets start giving some change
     if(change >= denominations[denominations.length-1-j].val)
     {
-       //console.log(change + " " +denominations[denominations.length-1-j].name +" "+denominations[denominations.length-1-j].val);
       var amountOfDenominationToGiveBack = Math.floor(change / denominations[denominations.length-1-j].val);
       var totalChangeToGiveBack = (amountOfDenominationToGiveBack * denominations[denominations.length-1-j].val);
       
       
       //There may not be enough of denmoination to give back so check
-      //NOTE: Had to use parseFloat as it was not checking correctly
       if(parseFloat(totalChangeToGiveBack) > parseFloat(cid[j][1]))
       {
         totalChangeToGiveBack = cid[j][1];
       }
-      //console.log(totalChangeToGiveBack +" "+ cid[j][1] + " " +amountOfDenominationToGiveBack+" " + denominations[denominations.length-1-j].val);
-      //console.log(amountOfDenominationToGiveBack * denominations[denominations.length-1-j].val);
-      
-      
+
       change -= totalChangeToGiveBack;
       change =  change.toFixed(2);
-      denominationReturn.push([denominations[denominations.length-1-j].name, totalChangeToGiveBack.toFixed(2)]);
+	  //Use Number() to make sure a floating point number is pushed, not a string
+      denominationReturn.push([denominations[denominations.length-1-j].name, Number(totalChangeToGiveBack.toFixed(2))]);
       
       
      
@@ -90,6 +87,7 @@ function checkCashRegister(price, cash, cid) {
     
     
   }
+  //Return the string "Insufficient Funds" if cash-in-drawer is less than the change due. 
   //This is to check if change is at 0
   //This is here because of the case of the right amount of denominations being present
   //Example change needed is 0.50 but you have a ONE and a PENNY, there is no way to give .50 back
